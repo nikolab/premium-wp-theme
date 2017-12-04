@@ -20,6 +20,8 @@ function premium_add_admin_page() {
 
     add_submenu_page('nik_premium', 'Premium Theme Options', 'Theme Options', 'manage_options', 'nik_premium_theme', 'premium_theme_support_page');
 
+    add_submenu_page('nik_premium', 'Premium Contact Form', 'Contact Form', 'manage_options', 'nik_premium_theme_contact', 'premium_contact_form_page');
+
     add_submenu_page('nik_premium', 'Premium CSS Options', 'Custom CSS', 'manage_options', 'nik_premium_css', 'premium_theme_settings_page');
 
 
@@ -63,14 +65,34 @@ function premium_custom_settings () {
     add_settings_field( 'custom-header', 'Custom Header', 'premium_custom_header', 'nik_premium_theme', 'premium-theme-options' );
     add_settings_field( 'custom-background', 'Custom Background', 'premium_custom_background', 'nik_premium_theme', 'premium-theme-options' );
 
+    //contact form option
+    register_setting( 'premium-contact-options', 'activate_contact' );
+
+    add_settings_section( 'premium-contact-section', 'Contact form', 'premium_contact_section', 'nik_premium_theme_contact' );
+
+    add_settings_field( 'activate-form', 'Activate Contact Form', 'premium_activate_section', 'nik_premium_theme_contact', 'premium-contact-section' );
 }
+
+
 
 //Post format callback functions
 
+function premium_contact_section () {
+    echo 'Activate and Deactivate built-in Contact Form';
+}
 
 
 function premium_theme_options() {
     echo 'Activate/deactivate theme options';
+}
+
+
+function premium_activate_section() {
+    $contact = get_option('activate_contact');
+
+    $checked = ( @$contact == 1 ? 'checked' : '');
+    echo '<label><input type="checkbox" name="activate_contact" id="activate_contact" value="1" '.$checked.' ></label><br>';
+
 }
 
 function premium_post_formats () {
@@ -158,6 +180,10 @@ function premium_theme_create_page() {
 
 function premium_theme_support_page() {
     require_once ( get_template_directory() . '/inc/templates/premium-theme-support.php' );
+}
+
+function premium_contact_form_page() {
+    require_once ( get_template_directory() . '/inc/templates/premium-contact-form-page.php' );
 }
 
 function premium_theme_settings_page() {
