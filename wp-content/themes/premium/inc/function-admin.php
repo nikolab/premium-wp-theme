@@ -71,11 +71,34 @@ function premium_custom_settings () {
     add_settings_section( 'premium-contact-section', 'Contact form', 'premium_contact_section', 'nik_premium_theme_contact' );
 
     add_settings_field( 'activate-form', 'Activate Contact Form', 'premium_activate_section', 'nik_premium_theme_contact', 'premium-contact-section' );
+
+    //custom css options
+    register_setting( 'premium-custom-css-options', 'premium_css', 'premium_sanitize_custom_css');
+
+    add_settings_section( 'premium-custom-css-section', 'Custom CSS', 'premium_custom_css_section_callback', 'nik_premium_css');
+
+    add_settings_field( 'custom-css', 'Insert your Custom CSS', 'premium_custom_css_callback', 'nik_premium_css', 'premium-custom-css-section');
 }
 
 
 
 //Post format callback functions
+
+
+function premium_custom_css_section_callback() {
+    echo 'Customize your Premium theme with your own CSS';
+}
+
+
+function premium_custom_css_callback() {
+    $css = get_option( 'premium_css' );
+    $css = ( empty($css) ? '/* Sunset Theme Custom CSS */' : $css );
+    echo '<div id="customCss">'.$css.'</div><textarea id="premium_css" name="premium_css" style="display:none;visibility:hidden;">'.$css.'</textarea>';
+
+}
+
+
+
 
 function premium_contact_section () {
     echo 'Activate and Deactivate built-in Contact Form';
@@ -149,7 +172,6 @@ function premium_sidebar_description () {
     echo  '<input type="text" name="user_description" value="'.$description.'" placeholder="Description" /><p>Write something smart.</p>';
 }
 
-
 function premium_sidebar_twitter() {
     $twitter = esc_attr( get_option( 'twitter_handler' ) );
     echo '<input type="text" name="twitter_handler" value="'.$twitter.'" placeholder="Twitter handler" /><p class="description">Input your Twitter username without the @ character.</p>';
@@ -172,6 +194,11 @@ function premium_sanitaze_twitter_handler( $input ) {
     return $output;
 }
 
+function premium_sanitize_custom_css($input) {
+    $output = esc_textarea( $input );
+    return $output;
+}
+
 //Template submenu functions
 function premium_theme_create_page() {
 	//generation of our admin page
@@ -188,5 +215,5 @@ function premium_contact_form_page() {
 
 function premium_theme_settings_page() {
     //generation of our admin page
-    echo '<h1>Custom CSS</h1>';
+    require_once ( get_template_directory() . '/inc/templates/premium-custom-css.php' );
 }
